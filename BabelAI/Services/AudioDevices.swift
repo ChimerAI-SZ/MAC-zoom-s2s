@@ -29,7 +29,9 @@ enum AudioDevices {
                 mElement: kAudioObjectPropertyElementMain
             )
             var nameSize = UInt32(MemoryLayout<CFString>.size)
-            let err = AudioObjectGetPropertyData(id, &prop, 0, nil, &nameSize, &name)
+            let err = withUnsafeMutablePointer(to: &name) { ptr in
+                AudioObjectGetPropertyData(id, &prop, 0, nil, &nameSize, ptr)
+            }
             if err == noErr { names.append(name as String) }
         }
         return names

@@ -9,6 +9,7 @@ final class AudioPlayer: ObservableObject {
     private let channels: AVAudioChannelCount = 1
 
     @Published private(set) var isRunning = false
+    private var farTapInstalled = false
 
     init() {
         renderFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: channels)!
@@ -24,6 +25,8 @@ final class AudioPlayer: ObservableObject {
             try engine.start()
             player.play()
             isRunning = true
+            // 安装 far tap：从最终混音抓取即将播放的音频，喂给 AECBridge（内部转换到16k/10ms）
+            installFarTapIfNeeded()
         } catch {
             Logger.shared.error("AudioPlayer start failed: \(error.localizedDescription)")
         }
@@ -32,6 +35,10 @@ final class AudioPlayer: ObservableObject {
     func stop() {
         guard isRunning else { return }
         player.stop()
+        if farTapInstalled {
+            engine.mainMixerNode.removeTap(onBus: 0)
+            farTapInstalled = false
+        }
         engine.stop()
         isRunning = false
     }
@@ -60,5 +67,20 @@ final class AudioPlayer: ObservableObject {
 
         buffer.floatChannelData!.pointee.update(from: floats, count: Int(frameCount))
         player.scheduleBuffer(buffer, completionHandler: nil)
+    }
+
+    private func installFarTapIfNeeded() {
+        guard !farTapInstalled else { return }
+        NSLog("[AudioPlayer] Installing far-end tap for AEC...")
+        let mixer = engine.mainMixerNode
+        let fmt = mixer.outputFormat(forBus: 0)
+        NSLog("[AudioPlayer] Mixer format: \(fmt.sampleRate)Hz, \(fmt.channelCount) channels")
+        // 使用更大的缓冲（20ms @ 48kHz = 960 帧）减少回调频率，降低 CPU 负载
+        let bufferSize: AVAudioFrameCount = 960
+        mixer.installTap(onBus: 0, bufferSize: bufferSize, format: fmt) { buffer, _ in
+            AECBridge.shared.ingestFar(buffer: buffer)
+        }
+        farTapInstalled = true
+        NSLog("[AudioPlayer] Far-end tap installed successfully")
     }
 }

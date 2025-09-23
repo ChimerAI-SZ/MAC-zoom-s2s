@@ -43,6 +43,10 @@ final class TranslationService: ObservableObject {
     // 会话 id
     private var sessionID = UUID().uuidString
     private var connectID = UUID().uuidString
+    
+    // 断连跟踪
+    private var userDisconnected = false
+    private var lastRealAudioTime: TimeInterval = 0
 
     // 指标
     private var pingSamples: [Double] = []
@@ -69,6 +73,12 @@ final class TranslationService: ObservableObject {
             guard let self = self else { return }
             if self.audioQueue.count >= self.maxQueue { self.audioQueue.removeFirst() }
             self.audioQueue.append(data)
+            
+            // 跟踪真实音频（非静音）
+            if data.count > 0 && !self.isAllSilent(data) {
+                self.lastRealAudioTime = CACurrentMediaTime()
+            }
+            
             let queueSize = self.audioQueue.count
             DispatchQueue.main.async {
                 self.healthRef?.updateQueueSize(queueSize)
@@ -77,7 +87,17 @@ final class TranslationService: ObservableObject {
     }
 
     func connect() {
-        NSLog("[BabelAI WS] TranslationService.connect() called")
+        NSLog("[BabelAI WS] TranslationService.connect() called, current state: \(state)")
+        
+        // 防止重复连接
+        switch state {
+        case .connecting, .connected, .reconnecting:
+            NSLog("[BabelAI WS] Already connecting/connected (state: \(state)), ignoring duplicate connect")
+            return
+        case .idle, .error:
+            // 允许从空闲或错误状态开始连接
+            break
+        }
         
         guard let api = config.readAPI() else {
             NSLog("[BabelAI WS] ⚠️ ERROR: Failed to read API config")
@@ -94,12 +114,25 @@ final class TranslationService: ObservableObject {
             self?.state = .connecting
         }
         reconnectAttempts = 0
+        userDisconnected = false
+        lastRealAudioTime = CACurrentMediaTime()
         startSession(api: api)
     }
 
     func disconnect() {
+        NSLog("[BabelAI WS] Disconnect requested, current state: \(state)")
+        
+        // 标记为用户主动断连
+        userDisconnected = true
+        
+        // 立即设置状态，防止新的连接尝试
+        DispatchQueue.main.async { [weak self] in
+            self?.state = .idle
+        }
+        
         queue.async { [weak self] in
             guard let self = self else { return }
+            NSLog("[BabelAI WS] Performing disconnect cleanup...")
             self.stopTimers()
             self.receiveLoopActive = false
             self.webSocket?.cancel(with: .goingAway, reason: nil)
@@ -107,7 +140,7 @@ final class TranslationService: ObservableObject {
             self.audioQueue.removeAll()
             DispatchQueue.main.async {
                 self.healthRef?.updateQueueSize(0)
-                self.state = .idle
+                NSLog("[BabelAI WS] Disconnect cleanup completed")
             }
         }
     }
@@ -173,11 +206,22 @@ final class TranslationService: ObservableObject {
         
         ws.receive { [weak self] result in
             guard let self = self else { return }
+            
+            // Check if we're disconnecting before processing
+            guard !self.userDisconnected else {
+                self.receiveLoopActive = false
+                Logger.shared.debug("Receive loop stopped due to user disconnect")
+                return
+            }
+            
             switch result {
             case .failure(let err):
-                Logger.shared.error("WebSocket receive error: \(err)")
+                // Only log non-disconnection errors
+                if !self.userDisconnected {
+                    Logger.shared.error("WebSocket receive error: \(err)")
+                    self.handleSocketError(err)
+                }
                 self.receiveLoopActive = false
-                self.handleSocketError(err)
             case .success(let message):
                 switch message {
                 case .data(let data):
@@ -192,7 +236,10 @@ final class TranslationService: ObservableObject {
                     Logger.shared.warn("Received unknown message type")
                 }
                 self.receiveLoopActive = false
-                self.receiveLoop()
+                // Continue loop only if not disconnecting
+                if !self.userDisconnected {
+                    self.receiveLoop()
+                }
             }
         }
     }
@@ -292,7 +339,15 @@ final class TranslationService: ObservableObject {
 
             let chunk: Data
             if self.audioQueue.isEmpty {
-                chunk = WireCodec.shared.silentFrame16k80ms
+                // 智能静音处理：只在真实音频后 500ms 内发送静音
+                let timeSinceRealAudio = CACurrentMediaTime() - self.lastRealAudioTime
+                if timeSinceRealAudio < 0.5 {
+                    // 保持时序同步
+                    chunk = WireCodec.shared.silentFrame16k80ms
+                } else {
+                    // 不发送任何内容，防止 API 处理静音
+                    return
+                }
             } else {
                 chunk = self.audioQueue.removeFirst()
                 let queueSize = self.audioQueue.count
@@ -344,6 +399,13 @@ final class TranslationService: ObservableObject {
     private func handleSocketError(_ error: Error) {
         Logger.shared.warn("WebSocket error: \(error.localizedDescription)")
         healthRef?.recordError()
+        
+        // 如果是用户主动断连，不要自动重连
+        guard !userDisconnected else {
+            Logger.shared.debug("User-initiated disconnect, skipping reconnect")
+            return
+        }
+        
         reconnect()
     }
 
@@ -360,6 +422,22 @@ final class TranslationService: ObservableObject {
         queue.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let self = self, let api = self.config.readAPI() else { return }
             self.startSession(api: api)
+        }
+    }
+    
+    // MARK: - Helper Functions
+    
+    private func isAllSilent(_ data: Data) -> Bool {
+        // 检查 PCM16 数据是否全为静音（接近零值）
+        return data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+            guard let base = ptr.bindMemory(to: Int16.self).baseAddress else { return true }
+            let count = data.count / 2
+            for i in 0..<count {
+                if abs(base[i]) > 50 { // 允许极小的噪声（约 -60dB）
+                    return false
+                }
+            }
+            return true
         }
     }
 }

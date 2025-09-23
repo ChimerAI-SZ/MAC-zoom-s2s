@@ -76,8 +76,8 @@ final class AudioManager: ObservableObject {
         self.converter = AVAudioConverter(from: inFmt, to: targetFormat)
 
         input.removeTap(onBus: 0)
-        // 选择较小缓冲，频繁回调，由我们聚合成 80ms@16k
-        let tapBufferSize: AVAudioFrameCount = 1024
+        // 使用稍大的缓冲减少回调频率（2048 样本 ≈ 42ms @ 48kHz）
+        let tapBufferSize: AVAudioFrameCount = 2048
         input.installTap(onBus: 0, bufferSize: tapBufferSize, format: inFmt) { [weak self] buffer, _ in
             self?.processThroughConverter(buffer: buffer)
         }
@@ -142,7 +142,7 @@ final class AudioManager: ObservableObject {
         sampleAcc.reserveCapacity(sampleAcc.count + frames)
         for i in 0..<frames { sampleAcc.append(ptr[i]) }
 
-        // 按 1280 样本切片，输出 PCM16
+        // 按 1280 样本切片，输出 PCM16（若开启 AEC，则在此处进行近端处理）
         while sampleAcc.count >= Int(frameSamples) {
             let chunkFloats = Array(sampleAcc[0..<Int(frameSamples)])
             sampleAcc.removeFirst(Int(frameSamples))
@@ -152,11 +152,46 @@ final class AudioManager: ObservableObject {
                 let v = max(-1.0, min(1.0, Double(chunkFloats[i])))
                 s16[i] = Int16(v * 32767.0)
             }
-            let data = s16.withUnsafeBufferPointer { Data(buffer: $0) }
-            // 计算简单 RMS 电平供诊断
-            let rms = sqrt(chunkFloats.reduce(0.0) { $0 + Double($1 * $1) } / Double(chunkFloats.count))
-            DispatchQueue.main.async { self.inputLevelRMS = Float(rms) }
-            chunkPublisher.send(data)
+            var data = s16.withUnsafeBufferPointer { Data(buffer: $0) }
+            
+            // AEC处理：始终让 AEC 处理真实音频信号
+            data = AECBridge.shared.processNear80ms(data)
+            
+            // 计算处理后音频的 RMS 电平（更准确）
+            let processedRMS = calculateRMS(from: data)
+            DispatchQueue.main.async { self.inputLevelRMS = Float(processedRMS) }
+            
+            // 专业级二元传输决策（类似Zoom/Teams）
+            // 使用更宽容的阈值，减少语音被切断
+            let hasSignificantAudio = processedRMS > 0.0001  // -80dB，更低的阈值
+            
+            // 二元决策：要么传输，要么不传输（没有中间状态）
+            if hasSignificantAudio {
+                // 有意义的音频信号，发送
+                chunkPublisher.send(data)
+            } else {
+                // 无意义信号，完全不发送
+                // 专业系统的做法：宁可丢失微弱语音，也要防止回声循环
+            }
         }
+    }
+    
+    // MARK: - Helper Functions
+    
+    private func calculateRMS(from pcm16Data: Data) -> Double {
+        // 计算PCM16数据的RMS值
+        let sampleCount = pcm16Data.count / 2
+        guard sampleCount > 0 else { return 0.0 }
+        
+        var sumSquares: Double = 0.0
+        pcm16Data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
+            let samples = ptr.bindMemory(to: Int16.self)
+            for i in 0..<sampleCount {
+                let normalizedSample = Double(samples[i]) / 32768.0
+                sumSquares += normalizedSample * normalizedSample
+            }
+        }
+        
+        return sqrt(sumSquares / Double(sampleCount))
     }
 }

@@ -22,6 +22,7 @@ struct MainView: View {
     @State private var showingPermissionAlert = false
     @State private var autoStarted = false
     @State private var blackholeAlertShownThisRun = false
+    @State private var isToggling = false  // 防止重复点击
 
     var body: some View {
         VStack(spacing: Design.Spacing.xl) {
@@ -222,7 +223,14 @@ struct MainView: View {
     }
 
     private func onToggle() {
-        NSLog("[BabelAI UI] Toggle button clicked, isRunning: \(audio.isRunning)")
+        NSLog("[BabelAI UI] Toggle button clicked, isRunning: \(audio.isRunning), isToggling: \(isToggling)")
+        
+        // 防止重复点击
+        guard !isToggling else {
+            NSLog("[BabelAI UI] Already toggling, ignoring duplicate click")
+            return
+        }
+        isToggling = true
         
         if audio.isRunning {
             NSLog("[BabelAI UI] Stopping services...")
@@ -230,16 +238,31 @@ struct MainView: View {
             ws.disconnect()
             player.stop()
             audio.stop()
+            AECBridge.shared.deactivate()
+            // 延迟重置标志，确保操作完成
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.isToggling = false
+                NSLog("[BabelAI UI] Toggle reset after stop")
+            }
         } else {
             NSLog("[BabelAI UI] Starting services...")
             audio.requestMicrophonePermission { granted in
                 NSLog("[BabelAI UI] Microphone permission: \(granted ? "✓ Granted" : "✗ Denied")")
                 guard granted else {
                     showingPermissionAlert = true
+                    self.isToggling = false  // 重置标志
                     return
                 }
                 // 启动链路
                 NSLog("[BabelAI UI] Starting audio pipeline...")
+                // 在所有模式下启用 AEC 桥（当前实现为安全透传；后续可切换 SpeexDSP 而不改接线）
+                NSLog("[BabelAI UI] About to access AECBridge.shared...")
+                let aec = AECBridge.shared
+                NSLog("[BabelAI UI] Got AECBridge instance, calling setEnabled...")
+                aec.setEnabled(true)
+                NSLog("[BabelAI UI] Called setEnabled, calling activate...")
+                aec.activate()
+                NSLog("[BabelAI UI] AEC activated")
                 player.start()
                 ws.connect()
                 audio.start()
@@ -249,6 +272,11 @@ struct MainView: View {
                 }
                 self.cancellable = c
                 NSLog("[BabelAI UI] Audio pipeline started")
+                // 延迟重置标志，确保操作完成
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.isToggling = false
+                    NSLog("[BabelAI UI] Toggle reset after start")
+                }
             }
         }
     }

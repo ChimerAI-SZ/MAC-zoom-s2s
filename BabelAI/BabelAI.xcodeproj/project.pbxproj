@@ -17,6 +17,9 @@
 		515C3106E71E3345EBA476D5 /* WireCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1C247CE0BEB8EBB03F01D /* WireCodec.swift */; };
 		54EF67CE2B28095B992A90CA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BB96ABE42AA97D810B1C32 /* SettingsView.swift */; };
 		5CC4346646C2482B5C711DD4 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62893338F5D86473D7A4341 /* AudioManager.swift */; };
+		B2C3D4E5F6789012345678AB /* AECBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* AECBridge.swift */; };
+		E1F2A3B4C5D6789012345678 /* libspeexdsp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6789012345678 /* libspeexdsp.dylib */; };
+		F1A2B3C4D5E6789012345678 /* libspeexdsp.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6789012345678 /* libspeexdsp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		5CDD3B9BF7BB2682EA0F8808 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C829AB9AE3FECE16FC5A18 /* TranslationService.swift */; };
 		698ECBEDB59EF2AA090B381E /* MeetingModeWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B8DE66C22E9D944E9B0934 /* MeetingModeWizardView.swift */; };
 		6CCCA4397C470A72CF4AC833 /* rpcmeta.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5904688A9733870CD975EC92 /* rpcmeta.pb.swift */; };
@@ -59,6 +62,8 @@
 		E67C1DD2D3879FD9F3AFEE24 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		EA59885DD816BE1C531EABA0 /* AudioDevices.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioDevices.swift; sourceTree = "<group>"; };
 		F62893338F5D86473D7A4341 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6789012345678 /* AECBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AECBridge.swift; sourceTree = "<group>"; };
+		D1E2F3A4B5C6789012345678 /* libspeexdsp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libspeexdsp.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,10 +72,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				506F1187B24D012F83C28932 /* SwiftProtobuf in Frameworks */,
+				E1F2A3B4C5D6789012345678 /* libspeexdsp.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A2B3C4D5E6F7890123456789 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F1A2B3C4D5E6789012345678 /* libspeexdsp.dylib in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXGroup section */
 		1EB7864640EEBD87220CB214 = {
@@ -81,6 +101,7 @@
 				C1841930C5E26173B93F4265 /* Proto */,
 				5E4BAE1CC20BD5191F971FA3 /* Services */,
 				54CE547C6EDA667DFDC98972 /* Views */,
+				A1B2C3D4E5F6789012345679 /* Frameworks */,
 				C9C63F6DB3B251BE5B12EFBF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,11 +120,20 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		A1B2C3D4E5F6789012345679 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D1E2F3A4B5C6789012345678 /* libspeexdsp.dylib */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
 		5E4BAE1CC20BD5191F971FA3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				F62893338F5D86473D7A4341 /* AudioManager.swift */,
 				E67C1DD2D3879FD9F3AFEE24 /* AudioPlayer.swift */,
+				A1B2C3D4E5F6789012345678 /* AECBridge.swift */,
 				31CEB2F8AAC64162B950E429 /* HealthMonitor.swift */,
 				2EAEBE80987E5B132372B10E /* Logger.swift */,
 				48C829AB9AE3FECE16FC5A18 /* TranslationService.swift */,
@@ -201,6 +231,7 @@
 			buildPhases = (
 				183D11C93EC6C8F33ECD24BD /* Sources */,
 				9715FAA8FD67302EA0713250 /* Frameworks */,
+				A2B3C4D5E6F7890123456789 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -258,6 +289,7 @@
 			files = (
 				5CC4346646C2482B5C711DD4 /* AudioManager.swift in Sources */,
 				FF33294E7FA3FFC4696ADE54 /* AudioPlayer.swift in Sources */,
+				B2C3D4E5F6789012345678AB /* AECBridge.swift in Sources */,
 				0118A8B48D89E346F3F273EF /* BabelAIApp.swift in Sources */,
 				D87497E1E33DCB463B2FACCD /* Config.swift in Sources */,
 				A27E40F399709BB4A31C56AA /* HealthMonitor.swift in Sources */,
@@ -361,6 +393,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.babelai.translator;
 				PRODUCT_NAME = BabelAI;
 				SDKROOT = macosx;
@@ -449,6 +485,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.babelai.translator;
 				PRODUCT_NAME = BabelAI;

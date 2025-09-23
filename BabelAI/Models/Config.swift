@@ -147,4 +147,10 @@ final class ConfigStore {
         let status = SecItemAdd(query as CFDictionary, nil)
         guard status == errSecSuccess else { throw KeychainError.unexpectedStatus(status) }
     }
+
+    // MARK: - Generic env accessor (for lightweight feature flags)
+    func envValue(_ key: String) -> String? {
+        loadEnvFile()
+        return envCache?[key]
+    }
 }

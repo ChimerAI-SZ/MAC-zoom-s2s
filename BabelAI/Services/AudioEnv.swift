@@ -35,14 +35,16 @@ enum AudioEnv {
         var cfName: CFString = "" as CFString
         var nameSize = UInt32(MemoryLayout<CFString>.size)
         
-        let status = AudioObjectGetPropertyData(
-            deviceID,
-            &nameAddr,
-            0,
-            nil,
-            &nameSize,
-            &cfName
-        )
+        let status = withUnsafeMutablePointer(to: &cfName) { ptr in
+            AudioObjectGetPropertyData(
+                deviceID,
+                &nameAddr,
+                0,
+                nil,
+                &nameSize,
+                ptr
+            )
+        }
         
         guard status == noErr else { return nil }
         return cfName as String
@@ -67,7 +69,6 @@ enum AudioEnv {
         if status != noErr { return [] }
         var names: [String] = []
         for id in deviceIDs {
-            var isOutput: UInt32 = 0
             var size = UInt32(MemoryLayout<UInt32>.size)
             var streamsAddr = AudioObjectPropertyAddress(
                 mSelector: kAudioDevicePropertyStreamConfiguration,
@@ -85,14 +86,16 @@ enum AudioEnv {
                 var cfName: CFString = "" as CFString
                 var nameSize = UInt32(MemoryLayout<CFString>.size)
                 
-                let status = AudioObjectGetPropertyData(
-                    id,
-                    &nameAddr,
-                    0,
-                    nil,
-                    &nameSize,
-                    &cfName
-                )
+                let status = withUnsafeMutablePointer(to: &cfName) { ptr in
+                    AudioObjectGetPropertyData(
+                        id,
+                        &nameAddr,
+                        0,
+                        nil,
+                        &nameSize,
+                        ptr
+                    )
+                }
                 
                 if status == noErr {
                     let name = cfName as String
