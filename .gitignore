@@ -52,3 +52,34 @@ htmlcov/
 *.mp3
 *.pcm
 *.opus
+
+# Xcode and Swift
+BabelAI/DerivedData/
+BabelAI/build/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Test outputs
+test_report_*.json
+*_test_report.md
+
+# Distribution files (hosted on GitHub Releases, not in repo)
+packaging/dist/*.dmg
+packaging/dist/*.pkg
+packaging/dist/*.zip
+website/downloads/*.dmg
+website/downloads/*.pkg
+website/downloads/*.zip

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <text x="100" y="200" fill="#ffffff" font-size="72" font-family="Inter, Arial, sans-serif" font-weight="700">S2S 实时语音同传（Mac）</text>
+  <text x="100" y="290" fill="#b7b7b7" font-size="36" font-family="Inter, Arial, sans-serif">中文↔英文 · 低延迟 · 高音质 · 菜单栏即用</text>
+  <rect x="100" y="350" width="1000" height="200" fill="#111" stroke="#1a1a1a"/>
+  <text x="130" y="430" fill="#ffffff" font-size="28" font-family="Consolas, SFMono-Regular, Menlo, monospace">$ S2S ●  正在运行   › Conference Mode: ON (BlackHole)</text>
+  <text x="130" y="480" fill="#b7b7b7" font-size="24" font-family="Consolas, SFMono-Regular, Menlo, monospace">[原文] 大家好，欢迎参加会议。  [翻译] Hello everyone, welcome to the meeting.</text>
+</svg>
+

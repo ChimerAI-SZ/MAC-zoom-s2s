@@ -1,0 +1,17 @@
+安装成功！
+
+S2S 已成功安装到您的应用程序文件夹。
+
+快速开始：
+1. 在应用程序文件夹或 Launchpad 中找到 S2S
+2. 双击启动应用
+3. 应用会在菜单栏显示 S2S 图标
+4. 点击菜单栏图标配置 API 密钥
+5. 选择 Start 开始实时翻译
+
+提示：
+• 首次使用需要配置 API 密钥（Settings → Advanced → API Configuration）
+• 会议模式需要安装 BlackHole 虚拟音频设备
+• 可在 Settings 中调整语言方向和音频设备
+
+感谢使用 S2S！

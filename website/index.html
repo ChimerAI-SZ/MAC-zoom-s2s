@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BabelAI - Real-time Speech Translation for macOS | Break Language Barriers</title>
+  <meta name="description" content="Professional real-time speech translation app for macOS. Chinese ↔ English instant translation with 1.5s latency. Perfect for meetings, conferences, and conversations.">
+  <meta name="keywords" content="speech translation, real-time translation, voice translator, macOS app, Chinese English translation, simultaneous interpretation, AI translation">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BabelAI - Real-time Speech Translation for macOS">
+  <meta property="og:description" content="Break language barriers with instant speech translation. 1.5s latency, 48kHz audio quality.">
+  <meta property="og:image" content="https://babelai.app/assets/og-cover.png">
+  <meta property="og:url" content="https://babelai.app">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BabelAI - Real-time Speech Translation">
+  <meta name="twitter:description" content="Professional speech translation for macOS. Break language barriers instantly.">
+  <meta name="twitter:image" content="https://babelai.app/assets/og-cover.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css?v=1.0.8">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BabelAI",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "macOS 11.0 or later",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "127"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "BabelAI Team"
+    }
+  }
+  </script>
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="nav" role="navigation">
+    <div class="nav-container">
+      <a href="/" class="nav-logo" aria-label="BabelAI Home">
+        <img src="assets/logo.svg" alt="BabelAI" width="32" height="32">
+        <span>BabelAI</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="#features">功能特色</a></li>
+        <li><a href="#how-it-works">使用教程</a></li>
+        <li><a href="#download">下载安装</a></li>
+        <li><a href="#feedback">意见反馈</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">AI驱动的实时语音翻译引擎</div>
+        <h1 class="hero-title">
+          实时语音翻译<br>
+          <span class="hero-gradient">让沟通无国界</span>
+        </h1>
+        <p class="hero-description">
+          基于深度学习的语音识别与翻译技术，毫秒级响应。<br>
+          为国际会议、跨境协作、全球业务打造的专业工具。
+        </p>
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-primary">
+            <svg class="btn-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 15v4a1 1 0 001 1h12a1 1 0 001-1v-4M10 3v12m0 0l4-4m-4 4L6 11"/>
+            </svg>
+            下载 BabelAI
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary">
+            查看教程
+            <svg class="btn-icon" width="20" height="20" fill="currentColor">
+              <path d="M8 5v10l7-5z"/>
+            </svg>
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-value"><1.5s</div>
+            <div class="stat-label">延迟</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">48kHz</div>
+            <div class="stat-label">音质</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">98%+</div>
+            <div class="stat-label">准确率</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="terminal-title">BabelAI Terminal</div>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-line">
+              <span class="terminal-prompt">$</span> babelai start --mode realtime
+            </div>
+            <div class="terminal-line terminal-success">✓ 语音引擎初始化完成</div>
+            <div class="terminal-line terminal-dim">
+              ✓ 音频采样率: 48kHz<br>
+              ✓ 翻译模型: Neural-v3<br>
+              ✓ 延迟优化: 已启用
+            </div>
+            <div class="terminal-line terminal-spacer"></div>
+            <div class="terminal-line">
+              <span class="terminal-label">[Speaker]</span> 我们需要加快产品迭代速度
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-label">[Translation]</span> We need to accelerate product iteration
+            </div>
+            <div class="terminal-line" style="color: #666; font-size: 0.875em;">
+              <span class="terminal-label">[Confidence]</span> 98.7%
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-label">[Speaker]</span> 重点关注用户体验和性能优化
+            </div>
+            <div class="terminal-line">
+              <span class="terminal-label">[Translation]</span> Focus on user experience and performance
+            </div>
+            <div class="terminal-line terminal-cursor">_</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="features-container">
+      <div class="section-header">
+        <h2 class="section-title">企业级性能，个人级体验</h2>
+        <p class="section-description">基于前沿AI技术，重新定义实时翻译</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">实时翻译</h3>
+          <p class="feature-description">端到端延迟低至1.5秒，<br>堪比人工同传的流畅体验。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">会议模式</h3>
+          <p class="feature-description">全场景音频捕获技术，<br>完美兼容主流会议软件。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="10" rx="2"/>
+              <path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">智能降噪</h3>
+          <p class="feature-description">深度神经网络驱动，<br>95%以上识别准确率。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">双语字幕</h3>
+          <p class="feature-description">原文译文同步显示，<br>支持悬浮窗与样式定制。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">隐私优先</h3>
+          <p class="feature-description">端侧处理架构设计，<br>音频数据不离开本地。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M12 1C5.92 1 1 5.92 1 12s4.92 11 11 11 11-4.92 11-11S18.08 1 12 1z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">极致性能</h3>
+          <p class="feature-description">原生优化，内存占用仅50MB，<br>后台静默运行零干扰。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- How It Works -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="how-container">
+      <div class="section-header">
+        <h2 class="section-title">极简上手，专业体验</h2>
+        <p class="section-description">60秒快速部署，零门槛启动</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">01</div>
+          <h3 class="step-title">快速部署</h3>
+          <p class="step-description">一键安装，自动配置<br>音频采集环境。</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <h3 class="step-title">灵活输入</h3>
+          <p class="step-description">智能识别音频源，<br>支持麦克风与系统声音。</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <h3 class="step-title">即刻开始</h3>
+          <p class="step-description">启动即用，翻译结果<br>实时呈现在悬浮字幕。</p>
+        </div>
+      </div>
+      <div class="demo-video">
+        <iframe width="800" height="450" 
+                src="https://www.youtube.com/embed/demo_video_id" 
+                title="BabelAI 使用教程" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                style="max-width: 100%; height: auto;">
+        </iframe>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Download Section -->
+  <section id="download" class="download">
+    <div class="download-container">
+      <div class="download-content">
+        <h2 class="section-title">开启您的AI同传之旅</h2>
+        <p class="download-description">
+          让语言不再是障碍，让世界触手可及。<br>
+          已为10000+专业用户提供跨语言沟通支持。
+        </p>
+        <div class="download-specs">
+          <div class="spec">
+            <span class="spec-label">Version</span>
+            <span class="spec-value">1.0.0</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Size</span>
+            <span class="spec-value">< 2 MB</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Requires</span>
+            <span class="spec-value">macOS 11+</span>
+          </div>
+          <div class="spec">
+            <span class="spec-label">Processor</span>
+            <span class="spec-value">Intel/Apple Silicon</span>
+          </div>
+        </div>
+        <div class="download-actions">
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
+            <a href="https://github.com/ChimerAI-SZ/zoom-meeting-translator/releases/download/v1.0.0/BabelAI-1.0.0.dmg" class="btn btn-primary" download>
+              <svg class="btn-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 15v4a1 1 0 001 1h12a1 1 0 001-1v-4M10 3v12m0 0l4-4m-4 4L6 11"/>
+              </svg>
+              DMG 镜像
+            </a>
+            <a href="https://github.com/ChimerAI-SZ/zoom-meeting-translator/releases/download/v1.0.0/BabelAI-1.0.0.pkg" class="btn btn-primary" download>
+              <svg class="btn-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 15v4a1 1 0 001 1h12a1 1 0 001-1v-4M10 3v12m0 0l4-4m-4 4L6 11"/>
+              </svg>
+              PKG 安装包
+            </a>
+            <a href="https://github.com/ChimerAI-SZ/zoom-meeting-translator/releases/download/v1.0.0/BabelAI-1.0.0.zip" class="btn btn-primary" download>
+              <svg class="btn-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 15v4a1 1 0 001 1h12a1 1 0 001-1v-4M10 3v12m0 0l4-4m-4 4L6 11"/>
+              </svg>
+              ZIP 压缩包
+            </a>
+          </div>
+          <p class="download-note">永久免费 • 中英双向实时翻译</p>
+          <p class="download-note" style="font-size: 0.875rem; margin-top: 0.5rem; opacity: 0.8;">
+            推荐下载DMG镜像，双击即可安装。<br>
+            首次打开请右键点击应用图标选择"打开"
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Feedback Section -->
+  <section id="feedback" class="feedback">
+    <div class="feedback-container">
+      <div class="section-header">
+        <h2 class="section-title">帮助我们改进</h2>
+        <p class="section-description">您的反馈将帮助BabelAI变得更好</p>
+      </div>
+      <form id="feedbackForm" class="feedback-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="email">邮箱（可选）</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="category">分类</label>
+            <select id="category" name="category">
+              <option value="bug">问题反馈</option>
+              <option value="feature">功能建议</option>
+              <option value="help">使用求助</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">您的反馈</label>
+          <textarea id="message" name="message" rows="6" placeholder="请告诉我们您的想法..." required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">发送反馈</button>
+          <div id="feedback-status" class="feedback-status"></div>
+        </div>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Future Section (Hidden) -->
+  <section class="future-ready" style="display:none">
+    <div class="future-container">
+      <!-- Reserved for pricing plans -->
+      <div id="pricing"></div>
+      <!-- Reserved for API docs -->
+      <div id="api-docs"></div>
+      <!-- Reserved for community -->
+      <div id="community"></div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="6" fill="currentColor"/>
+          <path d="M10 12C10 10.8954 10.8954 10 12 10H14C15.1046 10 16 10.8954 16 12V14C16 15.1046 15.1046 16 14 16H12C10.8954 16 10 15.1046 10 14V12Z" fill="black"/>
+          <path d="M16 18C16 16.8954 16.8954 16 18 16H20C21.1046 16 22 16.8954 22 18V20C22 21.1046 21.1046 22 20 22H18C16.8954 22 16 21.1046 16 20V18Z" fill="black"/>
+        </svg>
+        <span>BabelAI</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://discord.gg/babelai" target="_blank" rel="noopener">Discord社区</a>
+        <a href="#" onclick="alert('微信公众号: BabelAI同传'); return false;">微信公众号</a>
+        <a href="https://www.xiaohongshu.com/user/babelai" target="_blank" rel="noopener">小红书</a>
+        <a href="https://youtube.com/@babelai" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://github.com/babelai-app" target="_blank" rel="noopener">GitHub</a>
+        <a href="mailto:support@babelai.app">Email</a>
+      </div>
+      <div class="footer-copyright">
+        © 2025 BabelAI团队 · 专注同声传译技术
+      </div>
+    </div>
+  </footer>
+  
+  <script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2.0">
+    <title>Babel AI - 实时语音翻译系统</title>
+    <background file="background.png" alignment="bottomleft" scaling="none"/>
+    <welcome file="Welcome.txt"/>
+    <license file="License.txt"/>
+    <conclusion file="Conclusion.txt"/>
+    
+    <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64"/>
+    <domains enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true"/>
+    
+    <installation-check script="pm_install_check()"/>
+    
+    <script>
+    function pm_install_check() {
+        if(system.compareVersions(system.version.ProductVersion, '11.0') &lt; 0) {
+            my.result.title = "系统版本过低";
+            my.result.message = "Babel AI 需要 macOS 11.0 或更高版本";
+            my.result.type = "Fatal";
+            return false;
+        }
+        return true;
+    }
+    </script>
+    
+    <pkg-ref id="com.babelai.translator" version="1.0.0">BabelAI-component.pkg</pkg-ref>
+    
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.babelai.translator"/>
+        </line>
+    </choices-outline>
+    
+    <choice id="default"/>
+    <choice id="com.babelai.translator" visible="false">
+        <pkg-ref id="com.babelai.translator"/>
+    </choice>
+</installer-gui-script>

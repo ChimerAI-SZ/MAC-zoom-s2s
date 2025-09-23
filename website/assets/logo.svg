@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <!-- Tower of Babel inspired design -->
+  <!-- Base layer -->
+  <rect x="64" y="180" width="128" height="32" rx="4" fill="#4A5568"/>
+  
+  <!-- Middle layer -->
+  <rect x="76" y="148" width="104" height="32" rx="4" fill="#718096"/>
+  
+  <!-- Top layer -->
+  <rect x="88" y="116" width="80" height="32" rx="4" fill="#9CA3AF"/>
+  
+  <!-- Peak -->
+  <polygon points="128,84 108,116 148,116" fill="#CBD5E1"/>
+  
+  <!-- Translation waves -->
+  <path d="M40 128 Q 56 118, 72 128 T 104 128" stroke="#60A5FA" stroke-width="3" fill="none" opacity="0.8"/>
+  <path d="M152 128 Q 168 138, 184 128 T 216 128" stroke="#60A5FA" stroke-width="3" fill="none" opacity="0.8"/>
+  
+  <!-- Central AI dot -->
+  <circle cx="128" cy="100" r="6" fill="#60A5FA"/>
+  <circle cx="128" cy="100" r="10" fill="none" stroke="#60A5FA" stroke-width="2" opacity="0.5"/>
+</svg>

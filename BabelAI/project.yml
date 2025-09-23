@@ -1,0 +1,52 @@
+name: BabelAI
+options:
+  deploymentTarget:
+    macOS: "13.0"
+  bundleIdPrefix: com.babelai
+  createIntermediateGroups: true
+  
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""  # Will use automatic signing
+    
+targets:
+  BabelAI:
+    type: application
+    platform: macOS
+    sources: 
+      - path: App
+        createIntermediateGroups: true
+      - path: Views
+        createIntermediateGroups: true
+      - path: Services
+        createIntermediateGroups: true
+      - path: Models
+        createIntermediateGroups: true
+      - path: Proto
+        createIntermediateGroups: true
+        includes:
+          - "**/*.swift"
+        excludes:
+          - "**/*.proto"
+      - path: ../packaging/BabelAI.icns
+        type: file
+    dependencies:
+      - package: SwiftProtobuf
+        product: SwiftProtobuf
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.babelai.translator
+        CODE_SIGN_ENTITLEMENTS: BabelAI.entitlements
+        INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        PRODUCT_NAME: BabelAI
+        ENABLE_HARDENED_RUNTIME: NO
+        
+packages:
+  SwiftProtobuf:
+    url: https://github.com/apple/swift-protobuf.git
+    from: 1.25.0
