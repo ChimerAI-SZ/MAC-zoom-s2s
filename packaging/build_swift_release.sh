@@ -41,10 +41,8 @@ xcodebuild -project BabelAI.xcodeproj \
            -derivedDataPath "$BUILD_DIR" \
            clean build \
            CODE_SIGN_IDENTITY="-" \
-           CODE_SIGNING_REQUIRED=YES \
+           CODE_SIGNING_REQUIRED=NO \
            DEVELOPMENT_TEAM="" \
-           ENABLE_HARDENED_RUNTIME=NO \
-           OTHER_CODE_SIGN_FLAGS="--timestamp=none" \
            PRODUCT_BUNDLE_IDENTIFIER="com.babelai.translator" -quiet || {
     echo -e "${RED}❌ Build failed!${NC}"
     exit 1
@@ -72,17 +70,36 @@ if [ -f "BabelAI.icns" ]; then
     }
 fi
 
-# Deep sign the app with ad-hoc certificate
+# Fix dylib permissions and sign components
 echo "[6/8] ✍️  Code signing with ad-hoc certificate..."
-# First sign all frameworks and dylibs
+
+# CRITICAL: Fix libspeexdsp.dylib permissions to make it executable
+if [ -f "$DIST_DIR/$APP_NAME.app/Contents/Frameworks/libspeexdsp.dylib" ]; then
+    echo "  Fixing libspeexdsp.dylib permissions..."
+    chmod +x "$DIST_DIR/$APP_NAME.app/Contents/Frameworks/libspeexdsp.dylib"
+fi
+
+# Sign frameworks and dylibs FIRST (without runtime option for compatibility)
 find "$DIST_DIR/$APP_NAME.app" -name "*.dylib" -o -name "*.framework" | while read -r item; do
-    codesign --force --sign - "$item" 2>/dev/null || true
+    echo "  Signing: $(basename "$item")"
+    codesign --force --sign - --timestamp=none "$item" || {
+        echo -e "${YELLOW}  Warning: Failed to sign $(basename "$item")${NC}"
+    }
 done
-# Then sign the main app
+
+# Sign the main app LAST (without --deep to avoid re-signing libraries)
+# Use the distribution entitlements for better compatibility
+ENTITLEMENTS_FILE="../BabelAI/BabelAI-Distribution.entitlements"
+if [ ! -f "$ENTITLEMENTS_FILE" ]; then
+    echo -e "${YELLOW}  Using default entitlements${NC}"
+    ENTITLEMENTS_FILE="../BabelAI/BabelAI.entitlements"
+fi
+
+# Use more robust signing to prevent "damaged" errors
 codesign --force --deep --sign - \
-         --options runtime \
          --timestamp=none \
-         --entitlements ../BabelAI/BabelAI.entitlements \
+         --preserve-metadata=entitlements,requirements,flags,runtime \
+         --entitlements "$ENTITLEMENTS_FILE" \
          "$DIST_DIR/$APP_NAME.app" || {
     echo -e "${YELLOW}  ⚠️  Warning: Signing with entitlements failed, trying without...${NC}"
     codesign --force --deep --sign - --timestamp=none "$DIST_DIR/$APP_NAME.app"

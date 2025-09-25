@@ -10,7 +10,7 @@ echo ""
 
 # Variables
 APP_NAME="BabelAI"
-ZIP_NAME="BabelAI-1.0.0.zip"
+ZIP_NAME="BabelAI-1.0.5.zip"
 ZIP_PATH="dist/${ZIP_NAME}"
 TEMP_DIR="dist/BabelAI-Package"
 
@@ -29,11 +29,28 @@ rm -rf "${TEMP_DIR}" 2>/dev/null || true
 # Create temporary package directory
 echo "[2/4] 📦 Preparing package..."
 mkdir -p "${TEMP_DIR}"
+
+# Copy app preserving permissions
 cp -R "dist/${APP_NAME}.app" "${TEMP_DIR}/"
+
+# Ensure dylib has execute permission
+if [ -f "${TEMP_DIR}/${APP_NAME}.app/Contents/Frameworks/libspeexdsp.dylib" ]; then
+    chmod +x "${TEMP_DIR}/${APP_NAME}.app/Contents/Frameworks/libspeexdsp.dylib"
+fi
+
+# Clear any quarantine attributes before packaging
+xattr -cr "${TEMP_DIR}/${APP_NAME}.app" 2>/dev/null || true
+
+# Copy installation guide
 cp "README_FIRST.txt" "${TEMP_DIR}/安装说明_INSTALL_GUIDE.txt"
 
-# Create a simple install helper script
-cat > "${TEMP_DIR}/Install_BabelAI.command" <<'EOF'
+# Copy smart installer if exists, otherwise create simple one
+if [ -f "smart_installer.command" ]; then
+    cp "smart_installer.command" "${TEMP_DIR}/Install_BabelAI.command"
+    chmod +x "${TEMP_DIR}/Install_BabelAI.command"
+else
+    # Create a simple install helper script
+    cat > "${TEMP_DIR}/Install_BabelAI.command" <<'EOF'
 #!/bin/bash
 # BabelAI Quick Installer
 
@@ -80,7 +97,8 @@ echo ""
 read -p "Press Enter to close..."
 EOF
 
-chmod +x "${TEMP_DIR}/Install_BabelAI.command"
+    chmod +x "${TEMP_DIR}/Install_BabelAI.command"
+fi
 
 # Create ZIP
 echo "[3/4] 🗜️ Creating ZIP archive..."
